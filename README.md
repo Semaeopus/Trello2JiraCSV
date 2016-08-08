@@ -1,6 +1,12 @@
 # Trello2JiraCSV
 A simple python script to convert free Trello json exports to a csv format ready for importing with Jira.
 
+## Usage
+1. Export your trello board to json: See instructions [here](http://help.trello.com/article/747-exporting-data-from-trello-1)
+2. Run Trello2JiraCSV.py --json path/to/export/trello.json
+3. path/to/export/trello.csv should now be created
+4. Follow Jira instructions [here](https://confluence.atlassian.com/adminjiraserver071/importing-data-from-csv-802592885.html#ImportingdatafromCSV-howRunningtheCSVfileimportwizard) 
+
 ## Features
 * Cards become Jira Issues
 * All description, label and attachment data is carried over
