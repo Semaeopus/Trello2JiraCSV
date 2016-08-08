@@ -1,2 +1,2 @@
-# Trello2Jira
+# Trello2JiraCSV
 A simple python script to convert free trello json exports to a csv format ready for importing with Jira
