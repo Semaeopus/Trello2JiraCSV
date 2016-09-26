@@ -35,12 +35,22 @@ def AddCSVItem(str):
 	csvData += "\"{0}\",".format(finalStr)
 
 # Iterate a tasks checklist and generate subtasks
-def AddCheckListAsSubTasks(checkListID, parentID):
-	if checkListID:
-		for checkList in checklistDict[checkListID[0]]:
-			status = "Done" if checkList["state"] == "complete" else "To Do"
+def AddCheckListAsSubTasks(checkListIDs, parentID):
+	if not checkListIDs:
+		return
+
+	for checkListID in checkListIDs:
+		for item in checklistDict[checkListID]:
+			checkListName = checklistNames[checkListID]
+
+			status = "Done" if item["state"] == "complete" else "To Do"
 			resolution = "Done" if status == "Done" else ""
-			AddIssue("Sub-Task", "", parentID, status, resolution, checkList["name"], "", "", "", None)
+			summary = item["name"]
+
+			if checkListName != 'Checklist':
+				summary = checkListName + " - " + summary
+
+			AddIssue("Sub-Task", "", parentID, status, resolution, summary, "", "", "", None)
 
 # End the csv row with a simple newline
 def EndCSVLine():
@@ -100,10 +110,11 @@ jsonPath 		= opts.jsonPath
 csvPath 		= jsonPath.replace(".json", ".csv")
 listDict 		= {}
 checklistDict 	= {}
-headerLine 		= "issuetype, Issue ID, Parent ID, Status, Resolution, summary, description, component, attachment, attachment, label, label, label, label, label, label, label, label\n"
+checklistNames 	= {}
 csvData 		= ""
 maxLabels 		= 8
-maxAttachments  = 2
+maxAttachments  = 3
+headerLine 		= "issuetype, Issue ID, Parent ID, Status, Resolution, summary, description, component" + (", attachment" * maxAttachments) + (", label" * maxLabels) + "\n"
 
 print "Loading " + jsonPath
 
@@ -118,6 +129,7 @@ for list in data["lists"]:
 # Same as above to checklists, build up a id to name map
 for checkList in data["checklists"]:
 	checklistDict[checkList["id"]] = checkList["checkItems"]
+	checklistNames[checkList["id"]] = checkList["name"]
 
 # Dump some useful information about the board
 print "Trello Board: {0} ({1})".format(data["name"], data["url"])
